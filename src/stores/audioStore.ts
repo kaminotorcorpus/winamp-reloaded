@@ -8,7 +8,7 @@ export interface Track {
   duration: number;
 }
 
-export type Theme = 'classic-blue' | 'dark-metal' | 'neon' | 'gold' | 'minimal-grey';
+export type Theme = 'classic-blue' | 'dark-metal' | 'neon' | 'gold' | 'minimal-grey' | 'cyber-blue' | 'classic-green' | 'charcoal';
 
 export interface EQPreset {
   name: string;

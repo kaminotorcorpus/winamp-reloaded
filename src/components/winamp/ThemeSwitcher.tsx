@@ -8,6 +8,9 @@ const THEMES: { id: Theme; name: string; preview: string }[] = [
   { id: 'neon', name: 'Neon', preview: 'bg-fuchsia-600' },
   { id: 'gold', name: 'Gold', preview: 'bg-amber-500' },
   { id: 'minimal-grey', name: 'Minimal Grey', preview: 'bg-gray-400' },
+  { id: 'cyber-blue', name: 'Cyber Blue', preview: 'bg-cyan-500' },
+  { id: 'classic-green', name: 'Classic Green', preview: 'bg-green-500' },
+  { id: 'charcoal', name: 'Charcoal', preview: 'bg-slate-700' },
 ];
 
 export const ThemeSwitcher: React.FC = () => {
