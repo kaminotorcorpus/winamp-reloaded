@@ -3,12 +3,15 @@ import { MainPlayer } from './MainPlayer';
 import { Equalizer } from './Equalizer';
 import { Playlist } from './Playlist';
 import { ThemeSwitcher } from './ThemeSwitcher';
+import { ArduinoPanel } from './ArduinoPanel';
 import { useAudioEngine } from '@/hooks/useAudioEngine';
+import { useSerialConnection } from '@/hooks/useSerialConnection';
 import { useAudioStore } from '@/stores/audioStore';
 
 export const WinampPlayer: React.FC = () => {
   const { theme } = useAudioStore();
   const { play, pause, stop, seek, getAnalyserData, initAudioContext } = useAudioEngine();
+  const { isConnected, connect, disconnect } = useSerialConnection(seek);
 
   // Apply theme class to document
   useEffect(() => {
@@ -54,17 +57,29 @@ export const WinampPlayer: React.FC = () => {
         </p>
       </div>
 
-      {/* Player stack - vertical layout like classic Winamp */}
-      <div className="flex flex-col gap-0 relative z-10">
-        <MainPlayer
-          onPlay={play}
-          onPause={pause}
-          onStop={stop}
-          onSeek={seek}
-          getAnalyserData={getAnalyserData}
-        />
-        <Equalizer />
-        <Playlist />
+      {/* Main layout with Arduino panel on the side */}
+      <div className="flex gap-4 relative z-10">
+        {/* Player stack - vertical layout like classic Winamp */}
+        <div className="flex flex-col gap-0">
+          <MainPlayer
+            onPlay={play}
+            onPause={pause}
+            onStop={stop}
+            onSeek={seek}
+            getAnalyserData={getAnalyserData}
+          />
+          <Equalizer />
+          <Playlist />
+        </div>
+
+        {/* Arduino panel on the right */}
+        <div className="flex flex-col gap-0">
+          <ArduinoPanel
+            isConnected={isConnected}
+            onConnect={connect}
+            onDisconnect={disconnect}
+          />
+        </div>
       </div>
 
       {/* Theme switcher */}
@@ -73,10 +88,10 @@ export const WinampPlayer: React.FC = () => {
       {/* Instructions */}
       <div className="fixed bottom-4 left-4 winamp-window p-3 max-w-[180px] opacity-80 hover:opacity-100 transition-opacity">
         <div className="pixel-font text-[8px] text-muted-foreground space-y-1">
-          <p>★ Drag windows to move</p>
           <p>★ Click 📁 to load folder</p>
           <p>★ Double-click track to play</p>
           <p>★ Drag tracks to reorder</p>
+          <p>★ Connect Arduino for fader</p>
         </div>
       </div>
     </div>
