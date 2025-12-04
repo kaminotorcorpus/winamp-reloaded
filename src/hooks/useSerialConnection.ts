@@ -2,6 +2,10 @@ import { useEffect, useRef, useCallback } from 'react';
 import { useSerialStore } from '@/stores/serialStore';
 import { useAudioStore } from '@/stores/audioStore';
 
+// Get fresh state from stores (avoid stale closures)
+const getAudioState = () => useAudioStore.getState();
+const getSerialState = () => useSerialStore.getState();
+
 // Web Serial API type declarations
 declare global {
   interface Navigator {
@@ -126,9 +130,11 @@ export const useSerialConnection = (seek: (time: number) => void) => {
       setFaderPosition(position);
       lastFaderPositionRef.current = -1; // Reset for next touch
       
-      // Calculate target position from current audio time
-      if (duration > 0) {
-        const targetPosition = Math.round((currentTime / duration) * 1023);
+      // Calculate target position from current audio time using FRESH state
+      const { currentTime: freshTime, duration: freshDuration } = getAudioState();
+      if (freshDuration > 0) {
+        const targetPosition = Math.round((freshTime / freshDuration) * 1023);
+        console.log(`SYNC: sending TARGET:${targetPosition} (time: ${freshTime.toFixed(2)}s / ${freshDuration.toFixed(2)}s)`);
         sendTarget(targetPosition);
       }
       
@@ -143,21 +149,22 @@ export const useSerialConnection = (seek: (time: number) => void) => {
       setVolume(normalizedVolume);
       
     } else if (trimmed.startsWith('ENCODER:')) {
-      // Rotary encoder navigation
-      if (trimmed.includes('CW')) {
-        console.log('Next track (encoder CW)');
-        nextTrack();
-      } else if (trimmed.includes('CCW')) {
+      // Rotary encoder navigation - check CCW FIRST (more specific)
+      if (trimmed.includes('CCW')) {
         console.log('Previous track (encoder CCW)');
-        prevTrack();
+        getAudioState().prevTrack();
+      } else if (trimmed.includes('CW')) {
+        console.log('Next track (encoder CW)');
+        getAudioState().nextTrack();
       }
       
     } else if (trimmed.startsWith('ENCODER_BTN')) {
-      // Encoder button - toggle play/pause
-      console.log('Toggle play/pause (encoder button)');
-      setIsPlaying(!isPlaying);
+      // Encoder button - toggle play/pause using fresh state
+      const currentlyPlaying = getAudioState().isPlaying;
+      console.log(`Toggle play/pause (encoder button) - was: ${currentlyPlaying}`);
+      getAudioState().setIsPlaying(!currentlyPlaying);
     }
-  }, [duration, currentTime, isPlaying, setIsPlaying, setVolume, nextTrack, prevTrack, seek, sendTarget, setFaderPosition, setIsTouching, setArduinoVolume]);
+  }, [duration, setVolume, seek, sendTarget, setFaderPosition, setIsTouching, setArduinoVolume]);
 
   // Read serial data continuously
   const readLoop = useCallback(async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
