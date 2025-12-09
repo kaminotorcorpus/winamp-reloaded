@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,170 +6,99 @@
 
 @layer base {
   :root {
-    /* Classic Blue Theme - Default */
-    --background: 220 20% 20%;
-    --foreground: 210 20% 90%;
+    /* Modern Dark Theme - Default */
+    --background: 260 20% 6%;
+    --foreground: 0 0% 98%;
 
-    --card: 220 25% 25%;
-    --card-foreground: 210 20% 90%;
+    --card: 260 25% 10%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 220 25% 22%;
-    --popover-foreground: 210 20% 90%;
+    --popover: 260 25% 8%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 210 60% 50%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 280 100% 65%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 15% 35%;
-    --secondary-foreground: 210 20% 90%;
+    --secondary: 260 20% 15%;
+    --secondary-foreground: 0 0% 90%;
 
-    --muted: 220 15% 30%;
-    --muted-foreground: 215 15% 60%;
+    --muted: 260 15% 18%;
+    --muted-foreground: 260 10% 55%;
 
-    --accent: 200 80% 60%;
-    --accent-foreground: 220 20% 10%;
+    --accent: 320 100% 60%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 70% 50%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 220 20% 40%;
-    --input: 220 20% 30%;
-    --ring: 210 60% 50%;
+    --border: 260 20% 20%;
+    --input: 260 20% 15%;
+    --ring: 280 100% 65%;
 
-    --radius: 0.25rem;
+    --radius: 1rem;
 
-    /* Winamp specific */
-    --winamp-bg-dark: 220 25% 18%;
-    --winamp-bg-mid: 220 20% 28%;
-    --winamp-bg-light: 220 15% 38%;
-    --winamp-highlight: 220 15% 55%;
-    --winamp-shadow: 220 30% 10%;
-    --winamp-lcd-bg: 200 80% 8%;
-    --winamp-lcd-text: 180 100% 50%;
-    --winamp-lcd-dim: 180 60% 25%;
-    --winamp-button-face: 220 15% 50%;
-    --winamp-button-highlight: 220 10% 70%;
-    --winamp-button-shadow: 220 25% 20%;
-    --winamp-slider-track: 220 20% 25%;
-    --winamp-slider-thumb: 200 60% 55%;
-    --winamp-eq-green: 120 80% 45%;
-    --winamp-eq-yellow: 50 90% 50%;
-    --winamp-eq-red: 0 80% 50%;
+    /* Modern Player specific */
+    --player-bg: 260 30% 8%;
+    --player-surface: 260 25% 12%;
+    --player-glass: 260 30% 15%;
+    --player-glow: 280 100% 60%;
+    --player-glow-secondary: 320 100% 55%;
+    --player-text: 0 0% 95%;
+    --player-text-dim: 260 15% 50%;
+    --player-progress: 280 100% 60%;
+    --player-progress-glow: 280 80% 70%;
+    --eq-green: 150 80% 50%;
+    --eq-yellow: 45 100% 55%;
+    --eq-red: 0 85% 55%;
+    --eq-cyan: 180 100% 50%;
+  }
+
+  /* Neon Purple Theme */
+  .theme-neon {
+    --background: 270 40% 5%;
+    --foreground: 0 0% 98%;
+    --card: 270 35% 10%;
+    --primary: 280 100% 60%;
+    --accent: 180 100% 50%;
+    --player-glow: 280 100% 55%;
+    --player-glow-secondary: 180 100% 50%;
+    --eq-cyan: 180 100% 55%;
+  }
+
+  /* Gold Luxe Theme */
+  .theme-gold {
+    --background: 30 15% 6%;
+    --foreground: 40 50% 95%;
+    --card: 30 20% 10%;
+    --primary: 40 85% 55%;
+    --accent: 35 100% 60%;
+    --player-glow: 40 90% 55%;
+    --player-glow-secondary: 25 100% 50%;
+    --eq-green: 40 80% 50%;
+    --eq-yellow: 45 100% 60%;
   }
 
   /* Dark Metal Theme */
   .theme-dark-metal {
-    --background: 0 0% 8%;
-    --foreground: 0 0% 85%;
-    --card: 0 0% 12%;
-    --card-foreground: 0 0% 85%;
-    --primary: 0 0% 60%;
-    --primary-foreground: 0 0% 10%;
-    --secondary: 0 0% 18%;
-    --secondary-foreground: 0 0% 85%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 55%;
-    --accent: 0 0% 40%;
-    --accent-foreground: 0 0% 95%;
-    --border: 0 0% 25%;
-    --winamp-bg-dark: 0 0% 6%;
-    --winamp-bg-mid: 0 0% 14%;
-    --winamp-bg-light: 0 0% 22%;
-    --winamp-highlight: 0 0% 35%;
-    --winamp-shadow: 0 0% 3%;
-    --winamp-lcd-bg: 120 50% 3%;
-    --winamp-lcd-text: 120 100% 45%;
-    --winamp-lcd-dim: 120 40% 15%;
-    --winamp-button-face: 0 0% 30%;
-    --winamp-button-highlight: 0 0% 45%;
-    --winamp-button-shadow: 0 0% 8%;
-    --winamp-slider-thumb: 120 60% 40%;
-  }
-
-  /* Neon Theme */
-  .theme-neon {
-    --background: 280 50% 8%;
-    --foreground: 180 100% 80%;
-    --card: 280 40% 12%;
-    --card-foreground: 180 100% 80%;
-    --primary: 320 100% 60%;
-    --primary-foreground: 280 50% 10%;
-    --secondary: 280 30% 20%;
-    --secondary-foreground: 180 100% 80%;
-    --muted: 280 25% 18%;
-    --muted-foreground: 180 50% 50%;
-    --accent: 180 100% 50%;
-    --accent-foreground: 280 50% 10%;
-    --border: 280 40% 30%;
-    --winamp-bg-dark: 280 50% 6%;
-    --winamp-bg-mid: 280 40% 15%;
-    --winamp-bg-light: 280 35% 25%;
-    --winamp-highlight: 180 80% 50%;
-    --winamp-shadow: 280 60% 3%;
-    --winamp-lcd-bg: 280 80% 5%;
-    --winamp-lcd-text: 180 100% 60%;
-    --winamp-lcd-dim: 180 60% 25%;
-    --winamp-button-face: 280 40% 35%;
-    --winamp-button-highlight: 320 80% 60%;
-    --winamp-button-shadow: 280 50% 10%;
-    --winamp-slider-thumb: 320 100% 60%;
-  }
-
-  /* Gold Theme */
-  .theme-gold {
-    --background: 35 30% 12%;
-    --foreground: 40 60% 85%;
-    --card: 35 25% 18%;
-    --card-foreground: 40 60% 85%;
-    --primary: 40 80% 50%;
-    --primary-foreground: 35 40% 10%;
-    --secondary: 35 20% 25%;
-    --secondary-foreground: 40 60% 85%;
-    --muted: 35 15% 22%;
-    --muted-foreground: 40 30% 55%;
-    --accent: 45 90% 55%;
-    --accent-foreground: 35 40% 10%;
-    --border: 35 25% 35%;
-    --winamp-bg-dark: 35 30% 8%;
-    --winamp-bg-mid: 35 25% 18%;
-    --winamp-bg-light: 35 20% 28%;
-    --winamp-highlight: 40 60% 55%;
-    --winamp-shadow: 35 40% 5%;
-    --winamp-lcd-bg: 35 60% 5%;
-    --winamp-lcd-text: 40 100% 55%;
-    --winamp-lcd-dim: 40 50% 25%;
-    --winamp-button-face: 35 35% 40%;
-    --winamp-button-highlight: 40 50% 60%;
-    --winamp-button-shadow: 35 35% 12%;
-    --winamp-slider-thumb: 40 80% 50%;
+    --background: 0 0% 4%;
+    --foreground: 0 0% 90%;
+    --card: 0 0% 8%;
+    --primary: 0 0% 70%;
+    --accent: 200 80% 50%;
+    --player-glow: 200 80% 50%;
+    --player-glow-secondary: 180 70% 45%;
+    --muted-foreground: 0 0% 45%;
   }
 
   /* Minimal Grey Theme */
   .theme-minimal-grey {
-    --background: 0 0% 92%;
-    --foreground: 0 0% 15%;
-    --card: 0 0% 88%;
-    --card-foreground: 0 0% 15%;
-    --primary: 0 0% 30%;
-    --primary-foreground: 0 0% 95%;
-    --secondary: 0 0% 82%;
-    --secondary-foreground: 0 0% 15%;
-    --muted: 0 0% 85%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 0 0% 50%;
-    --accent-foreground: 0 0% 95%;
-    --border: 0 0% 70%;
-    --winamp-bg-dark: 0 0% 78%;
-    --winamp-bg-mid: 0 0% 85%;
-    --winamp-bg-light: 0 0% 90%;
-    --winamp-highlight: 0 0% 98%;
-    --winamp-shadow: 0 0% 60%;
-    --winamp-lcd-bg: 0 0% 10%;
-    --winamp-lcd-text: 120 80% 55%;
-    --winamp-lcd-dim: 120 40% 25%;
-    --winamp-button-face: 0 0% 75%;
-    --winamp-button-highlight: 0 0% 95%;
-    --winamp-button-shadow: 0 0% 55%;
-    --winamp-slider-thumb: 0 0% 40%;
+    --background: 220 15% 10%;
+    --foreground: 0 0% 95%;
+    --card: 220 15% 14%;
+    --primary: 220 60% 55%;
+    --accent: 200 100% 55%;
+    --player-glow: 220 70% 55%;
+    --player-glow-secondary: 200 80% 50%;
   }
 }
 
@@ -179,140 +108,242 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-    font-family: 'VT323', monospace;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
   }
 }
 
 @layer components {
-  .winamp-window {
-    background: hsl(var(--winamp-bg-mid));
-    border: 2px solid hsl(var(--winamp-highlight));
-    border-right-color: hsl(var(--winamp-shadow));
-    border-bottom-color: hsl(var(--winamp-shadow));
+  /* Modern glass panel */
+  .glass-panel {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--player-glass) / 0.6) 0%,
+      hsl(var(--player-surface) / 0.4) 100%
+    );
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--border) / 0.5);
     box-shadow: 
-      inset 1px 1px 0 hsl(var(--winamp-highlight)),
-      inset -1px -1px 0 hsl(var(--winamp-shadow)),
-      2px 2px 8px hsl(var(--winamp-shadow) / 0.5);
+      0 8px 32px hsl(var(--background) / 0.4),
+      inset 0 1px 0 hsl(var(--foreground) / 0.05);
   }
 
-  .winamp-titlebar {
+  /* Glowing card */
+  .glow-card {
     background: linear-gradient(
       180deg,
-      hsl(var(--winamp-bg-light)) 0%,
-      hsl(var(--winamp-bg-mid)) 50%,
-      hsl(var(--winamp-bg-dark)) 100%
+      hsl(var(--player-surface)) 0%,
+      hsl(var(--player-bg)) 100%
     );
-    border-bottom: 1px solid hsl(var(--winamp-shadow));
-  }
-
-  .winamp-button {
-    background: linear-gradient(
-      180deg,
-      hsl(var(--winamp-button-highlight)) 0%,
-      hsl(var(--winamp-button-face)) 50%,
-      hsl(var(--winamp-button-shadow)) 100%
-    );
-    border: 1px solid hsl(var(--winamp-highlight));
-    border-right-color: hsl(var(--winamp-shadow));
-    border-bottom-color: hsl(var(--winamp-shadow));
+    border: 1px solid hsl(var(--border) / 0.3);
     box-shadow: 
-      inset 1px 1px 0 hsl(var(--winamp-button-highlight) / 0.5),
-      inset -1px -1px 0 hsl(var(--winamp-shadow) / 0.5);
-    transition: all 0.05s;
+      0 0 60px hsl(var(--player-glow) / 0.15),
+      0 20px 50px hsl(var(--background) / 0.6);
   }
 
-  .winamp-button:active {
+  /* Modern button */
+  .modern-btn {
+    @apply relative overflow-hidden transition-all duration-300;
+    background: hsl(var(--secondary));
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+
+  .modern-btn:hover {
+    background: hsl(var(--secondary) / 0.8);
+    border-color: hsl(var(--player-glow) / 0.5);
+    box-shadow: 0 0 20px hsl(var(--player-glow) / 0.2);
+  }
+
+  .modern-btn:active {
+    transform: scale(0.96);
+  }
+
+  .modern-btn-primary {
     background: linear-gradient(
-      180deg,
-      hsl(var(--winamp-button-shadow)) 0%,
-      hsl(var(--winamp-button-face)) 50%,
-      hsl(var(--winamp-button-highlight)) 100%
+      135deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--accent)) 100%
     );
-    border-color: hsl(var(--winamp-shadow));
-    border-right-color: hsl(var(--winamp-highlight));
-    border-bottom-color: hsl(var(--winamp-highlight));
+    border: none;
     box-shadow: 
-      inset -1px -1px 0 hsl(var(--winamp-button-highlight) / 0.5),
-      inset 1px 1px 0 hsl(var(--winamp-shadow) / 0.5);
+      0 4px 20px hsl(var(--primary) / 0.4),
+      inset 0 1px 0 hsl(var(--foreground) / 0.1);
   }
 
-  .winamp-button-active {
+  .modern-btn-primary:hover {
+    box-shadow: 
+      0 6px 30px hsl(var(--primary) / 0.6),
+      inset 0 1px 0 hsl(var(--foreground) / 0.15);
+    transform: translateY(-2px);
+  }
+
+  /* Progress/Seek bar */
+  .modern-progress {
+    @apply relative h-2 rounded-full overflow-hidden;
+    background: hsl(var(--muted));
+  }
+
+  .modern-progress-fill {
+    @apply absolute inset-y-0 left-0 rounded-full;
     background: linear-gradient(
-      180deg,
-      hsl(var(--winamp-button-shadow)) 0%,
-      hsl(var(--accent)) 50%,
-      hsl(var(--winamp-button-highlight)) 100%
+      90deg,
+      hsl(var(--player-glow)) 0%,
+      hsl(var(--player-glow-secondary)) 100%
+    );
+    box-shadow: 0 0 15px hsl(var(--player-glow) / 0.6);
+  }
+
+  /* Volume/EQ slider */
+  .modern-slider {
+    @apply relative rounded-full;
+    background: hsl(var(--muted) / 0.6);
+  }
+
+  .modern-slider-thumb {
+    @apply absolute rounded-full;
+    background: hsl(var(--foreground));
+    box-shadow: 
+      0 0 10px hsl(var(--player-glow) / 0.5),
+      0 2px 8px hsl(var(--background) / 0.5);
+  }
+
+  /* Glowing text */
+  .glow-text {
+    color: hsl(var(--foreground));
+    text-shadow: 0 0 20px hsl(var(--player-glow) / 0.5);
+  }
+
+  .glow-text-accent {
+    color: hsl(var(--player-glow));
+    text-shadow: 
+      0 0 10px hsl(var(--player-glow) / 0.8),
+      0 0 30px hsl(var(--player-glow) / 0.4);
+  }
+
+  /* Mono font for time/numbers */
+  .font-mono-player {
+    font-family: 'JetBrains Mono', monospace;
+    font-feature-settings: 'tnum';
+  }
+
+  /* Album art container */
+  .album-art {
+    @apply relative rounded-2xl overflow-hidden;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary) / 0.3) 0%,
+      hsl(var(--accent) / 0.2) 50%,
+      hsl(var(--player-glow-secondary) / 0.3) 100%
+    );
+    box-shadow: 
+      0 0 80px hsl(var(--player-glow) / 0.3),
+      0 20px 40px hsl(var(--background) / 0.6);
+  }
+
+  .album-art::before {
+    content: '';
+    @apply absolute inset-0;
+    background: radial-gradient(
+      circle at 30% 30%,
+      hsl(var(--player-glow) / 0.4) 0%,
+      transparent 60%
     );
   }
 
-  .winamp-lcd {
-    background: hsl(var(--winamp-lcd-bg));
-    border: 2px solid hsl(var(--winamp-shadow));
-    border-right-color: hsl(var(--winamp-highlight));
-    border-bottom-color: hsl(var(--winamp-highlight));
-    box-shadow: inset 2px 2px 8px hsl(0 0% 0% / 0.8);
-  }
-
-  .winamp-slider-track {
-    background: hsl(var(--winamp-slider-track));
-    border: 1px solid hsl(var(--winamp-shadow));
-    border-right-color: hsl(var(--winamp-highlight));
-    border-bottom-color: hsl(var(--winamp-highlight));
-  }
-
-  .winamp-slider-thumb {
+  /* EQ bar */
+  .eq-bar {
+    @apply rounded-full transition-all duration-100;
     background: linear-gradient(
-      180deg,
-      hsl(var(--winamp-slider-thumb)) 0%,
-      hsl(var(--winamp-button-face)) 100%
+      0deg,
+      hsl(var(--eq-green)) 0%,
+      hsl(var(--eq-yellow)) 60%,
+      hsl(var(--eq-red)) 100%
     );
-    border: 1px solid hsl(var(--winamp-highlight));
-    border-right-color: hsl(var(--winamp-shadow));
-    border-bottom-color: hsl(var(--winamp-shadow));
+    box-shadow: 0 0 10px currentColor;
   }
 
-  .lcd-text {
-    color: hsl(var(--winamp-lcd-text));
-    text-shadow: 0 0 8px hsl(var(--winamp-lcd-text) / 0.8);
-    font-family: 'VT323', monospace;
-  }
-
-  .lcd-text-dim {
-    color: hsl(var(--winamp-lcd-dim));
-  }
-
-  .pixel-font {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 8px;
-    letter-spacing: 0.5px;
-  }
-
-  .eq-slider {
-    writing-mode: vertical-lr;
-    direction: rtl;
+  /* Waveform visualization */
+  .waveform-bar {
+    @apply rounded-sm;
+    background: linear-gradient(
+      0deg,
+      hsl(var(--eq-cyan)) 0%,
+      hsl(var(--player-glow)) 100%
+    );
   }
 }
 
 @layer utilities {
-  .scrollbar-winamp::-webkit-scrollbar {
-    width: 14px;
+  /* Custom scrollbar */
+  .scrollbar-modern::-webkit-scrollbar {
+    width: 6px;
   }
 
-  .scrollbar-winamp::-webkit-scrollbar-track {
-    background: hsl(var(--winamp-bg-dark));
-    border: 1px solid hsl(var(--winamp-shadow));
+  .scrollbar-modern::-webkit-scrollbar-track {
+    background: hsl(var(--muted) / 0.3);
+    border-radius: 3px;
   }
 
-  .scrollbar-winamp::-webkit-scrollbar-thumb {
-    background: linear-gradient(
-      90deg,
-      hsl(var(--winamp-button-highlight)) 0%,
-      hsl(var(--winamp-button-face)) 50%,
-      hsl(var(--winamp-button-shadow)) 100%
+  .scrollbar-modern::-webkit-scrollbar-thumb {
+    background: hsl(var(--player-glow) / 0.5);
+    border-radius: 3px;
+  }
+
+  .scrollbar-modern::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--player-glow) / 0.7);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      135deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--accent)) 50%,
+      hsl(var(--player-glow-secondary)) 100%
     );
-    border: 1px solid hsl(var(--winamp-highlight));
-    border-right-color: hsl(var(--winamp-shadow));
-    border-bottom-color: hsl(var(--winamp-shadow));
+  }
+
+  /* Animated gradient background */
+  .animated-gradient {
+    background: linear-gradient(
+      -45deg,
+      hsl(var(--background)) 0%,
+      hsl(var(--player-surface)) 25%,
+      hsl(var(--player-bg)) 50%,
+      hsl(var(--background)) 100%
+    );
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+  }
+
+  @keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Pulse ring animation */
+  .pulse-ring {
+    animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-ring {
+    0%, 100% {
+      box-shadow: 0 0 0 0 hsl(var(--player-glow) / 0.4);
+    }
+    50% {
+      box-shadow: 0 0 0 15px hsl(var(--player-glow) / 0);
+    }
+  }
+
+  /* Spinning animation for album art */
+  .spin-slow {
+    animation: spin 20s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
 }
