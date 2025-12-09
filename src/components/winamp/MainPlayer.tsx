@@ -3,7 +3,10 @@ import { LCDDisplay } from './LCDDisplay';
 import { PlaybackControls } from './PlaybackControls';
 import { VolumeSlider } from './VolumeSlider';
 import { SeekBar } from './SeekBar';
+import { Visualizer } from './Visualizer';
 import { useAudioStore } from '@/stores/audioStore';
+import { Settings2, ListMusic } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface MainPlayerProps {
   onPlay: () => void;
@@ -20,49 +23,61 @@ export const MainPlayer: React.FC<MainPlayerProps> = ({
   onSeek,
   getAnalyserData,
 }) => {
-  const { toggleEqualizer, togglePlaylist, showEqualizer, showPlaylist } = useAudioStore();
+  const { toggleEqualizer, togglePlaylist, showEqualizer, showPlaylist, isPlaying, playlist, currentTrackIndex } = useAudioStore();
+
+  const currentTrack = playlist[currentTrackIndex];
 
   return (
-    <div className="winamp-window">
-      {/* Title Bar */}
-      <div className="winamp-titlebar h-5 flex items-center justify-between px-2 cursor-grab">
-        <span className="pixel-font text-foreground/80 text-[10px]">RETRO PLAYER</span>
-        <div className="flex gap-1">
-          <button className="winamp-button w-4 h-3 pixel-font text-[8px]">_</button>
-          <button className="winamp-button w-4 h-3 pixel-font text-[8px]">□</button>
-          <button className="winamp-button w-4 h-3 pixel-font text-[8px] hover:bg-destructive/80">×</button>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="glow-card rounded-3xl p-6 space-y-6"
+    >
+      {/* Album Art / Visualizer */}
+      <div className="relative">
+        <div className={`album-art aspect-square w-full max-w-xs mx-auto flex items-center justify-center ${isPlaying ? 'spin-slow' : ''}`}>
+          <Visualizer getAnalyserData={getAnalyserData} />
         </div>
+        
+        {/* Floating glow behind */}
+        <div 
+          className="absolute inset-0 -z-10 blur-3xl opacity-40"
+          style={{
+            background: `radial-gradient(circle, hsl(var(--player-glow)) 0%, transparent 70%)`
+          }}
+        />
       </div>
-      
-      <div className="w-[300px] p-1 space-y-1">
-        {/* LCD Display */}
-        <LCDDisplay getAnalyserData={getAnalyserData} />
 
-        {/* Seek Bar */}
-        <SeekBar onSeek={onSeek} />
+      {/* Track Info */}
+      <LCDDisplay getAnalyserData={getAnalyserData} />
 
-        {/* Playback Controls */}
-        <PlaybackControls onPlay={onPlay} onPause={onPause} onStop={onStop} />
+      {/* Seek Bar */}
+      <SeekBar onSeek={onSeek} />
 
-        {/* Volume */}
-        <VolumeSlider />
+      {/* Playback Controls */}
+      <PlaybackControls onPlay={onPlay} onPause={onPause} onStop={onStop} />
 
-        {/* Toggle buttons */}
-        <div className="flex justify-center gap-2 pt-1 pb-1">
-          <button
-            onClick={toggleEqualizer}
-            className={`winamp-button px-3 py-1 pixel-font text-[10px] ${showEqualizer ? 'winamp-button-active' : ''}`}
-          >
-            EQ
-          </button>
-          <button
-            onClick={togglePlaylist}
-            className={`winamp-button px-3 py-1 pixel-font text-[10px] ${showPlaylist ? 'winamp-button-active' : ''}`}
-          >
-            PL
-          </button>
-        </div>
+      {/* Volume */}
+      <VolumeSlider />
+
+      {/* Toggle buttons */}
+      <div className="flex justify-center gap-3 pt-2">
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={toggleEqualizer}
+          className={`modern-btn rounded-full p-3 ${showEqualizer ? 'modern-btn-primary' : ''}`}
+        >
+          <Settings2 size={20} />
+        </motion.button>
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={togglePlaylist}
+          className={`modern-btn rounded-full p-3 ${showPlaylist ? 'modern-btn-primary' : ''}`}
+        >
+          <ListMusic size={20} />
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 };

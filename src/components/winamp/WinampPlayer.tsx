@@ -34,46 +34,38 @@ export const WinampPlayer: React.FC = () => {
   }, [initAudioContext]);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      {/* Background pattern */}
-      <div 
-        className="fixed inset-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage: `
-            linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px),
-            linear-gradient(hsl(var(--foreground)) 1px, transparent 1px)
-          `,
-          backgroundSize: '20px 20px',
-        }}
-      />
-
-      {/* Title */}
-      <div className="text-center mb-6">
-        <h1 className="text-3xl font-bold lcd-text pixel-font tracking-wider animate-pulse-glow">
-          RETRO AUDIO PLAYER
-        </h1>
-        <p className="text-muted-foreground text-sm mt-2 font-mono">
-          Winamp-inspired • Click 📁 to load music
-        </p>
+    <div className="min-h-screen animated-gradient flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Ambient glow effects */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div 
+          className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[120px] opacity-30"
+          style={{ background: 'hsl(var(--player-glow))' }}
+        />
+        <div 
+          className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-[100px] opacity-20"
+          style={{ background: 'hsl(var(--player-glow-secondary))' }}
+        />
       </div>
 
-      {/* Main layout with Arduino panel on the side */}
-      <div className="flex gap-4 relative z-10">
-        {/* Player stack - vertical layout like classic Winamp */}
-        <div className="flex flex-col gap-0">
-          <MainPlayer
-            onPlay={play}
-            onPause={pause}
-            onStop={stop}
-            onSeek={seek}
-            getAnalyserData={getAnalyserData}
-          />
+      {/* Main container */}
+      <div className="relative z-10 w-full max-w-md mx-auto">
+        {/* Main Player */}
+        <MainPlayer
+          onPlay={play}
+          onPause={pause}
+          onStop={stop}
+          onSeek={seek}
+          getAnalyserData={getAnalyserData}
+        />
+
+        {/* Secondary panels - Equalizer and Playlist side by side on larger screens */}
+        <div className="mt-4 space-y-4">
           <Equalizer />
           <Playlist />
         </div>
 
-        {/* Arduino panel on the right */}
-        <div className="flex flex-col gap-0">
+        {/* Arduino Panel - collapsible at bottom */}
+        <div className="mt-4">
           <ArduinoPanel
             isConnected={isConnected}
             onConnect={connect}
@@ -82,18 +74,8 @@ export const WinampPlayer: React.FC = () => {
         </div>
       </div>
 
-      {/* Theme switcher */}
+      {/* Theme switcher - floating */}
       <ThemeSwitcher />
-
-      {/* Instructions */}
-      <div className="fixed bottom-4 left-4 winamp-window p-3 max-w-[180px] opacity-80 hover:opacity-100 transition-opacity">
-        <div className="pixel-font text-[8px] text-muted-foreground space-y-1">
-          <p>★ Click 📁 to load folder</p>
-          <p>★ Double-click track to play</p>
-          <p>★ Drag tracks to reorder</p>
-          <p>★ Connect Arduino for fader</p>
-        </div>
-      </div>
     </div>
   );
 };
