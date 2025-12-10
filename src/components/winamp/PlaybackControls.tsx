@@ -2,6 +2,7 @@ import React from 'react';
 import { 
   Play, 
   Pause, 
+  Square, 
   SkipBack, 
   SkipForward, 
   Shuffle, 
@@ -10,7 +11,6 @@ import {
   FolderOpen 
 } from 'lucide-react';
 import { useAudioStore, Track } from '@/stores/audioStore';
-import { motion } from 'framer-motion';
 
 interface PlaybackControlsProps {
   onPlay: () => void;
@@ -32,10 +32,12 @@ export const PlaybackControls: React.FC<PlaybackControlsProps> = ({
     nextTrack,
     prevTrack,
     setPlaylist,
+    setIsPlaying,
   } = useAudioStore();
 
   const handleOpenFiles = async () => {
     try {
+      // Try directory picker first
       if ('showDirectoryPicker' in window) {
         const dirHandle = await (window as any).showDirectoryPicker();
         const tracks: Track[] = [];
@@ -61,6 +63,7 @@ export const PlaybackControls: React.FC<PlaybackControlsProps> = ({
           onPlay();
         }
       } else {
+        // Fallback to file input
         const input = document.createElement('input');
         input.type = 'file';
         input.multiple = true;
@@ -91,67 +94,69 @@ export const PlaybackControls: React.FC<PlaybackControlsProps> = ({
   };
 
   return (
-    <div className="flex items-center justify-center gap-2">
-      {/* Shuffle */}
-      <motion.button
-        whileTap={{ scale: 0.9 }}
-        onClick={toggleShuffle}
-        className={`modern-btn rounded-full p-2.5 ${isShuffle ? 'text-primary' : 'text-muted-foreground'}`}
-        title="Shuffle"
-      >
-        <Shuffle size={18} />
-      </motion.button>
-
+    <div className="flex items-center justify-center gap-1 p-2">
       {/* Previous */}
-      <motion.button
-        whileTap={{ scale: 0.9 }}
+      <button
         onClick={prevTrack}
-        className="modern-btn rounded-full p-3"
+        className="winamp-button p-2 hover:opacity-90"
         title="Previous"
       >
-        <SkipBack size={22} fill="currentColor" />
-      </motion.button>
+        <SkipBack size={14} />
+      </button>
 
-      {/* Play/Pause - Large center button */}
-      <motion.button
-        whileTap={{ scale: 0.95 }}
-        whileHover={{ scale: 1.05 }}
+      {/* Play */}
+      <button
         onClick={isPlaying ? onPause : onPlay}
-        className={`modern-btn-primary rounded-full p-5 ${isPlaying ? 'pulse-ring' : ''}`}
+        className={`winamp-button p-2 hover:opacity-90 ${isPlaying ? 'winamp-button-active' : ''}`}
         title={isPlaying ? 'Pause' : 'Play'}
       >
-        {isPlaying ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" className="ml-1" />}
-      </motion.button>
+        {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+      </button>
+
+      {/* Stop */}
+      <button
+        onClick={onStop}
+        className="winamp-button p-2 hover:opacity-90"
+        title="Stop"
+      >
+        <Square size={14} />
+      </button>
 
       {/* Next */}
-      <motion.button
-        whileTap={{ scale: 0.9 }}
+      <button
         onClick={nextTrack}
-        className="modern-btn rounded-full p-3"
+        className="winamp-button p-2 hover:opacity-90"
         title="Next"
       >
-        <SkipForward size={22} fill="currentColor" />
-      </motion.button>
+        <SkipForward size={14} />
+      </button>
 
-      {/* Repeat */}
-      <motion.button
-        whileTap={{ scale: 0.9 }}
-        onClick={toggleRepeat}
-        className={`modern-btn rounded-full p-2.5 ${repeatMode !== 'none' ? 'text-primary' : 'text-muted-foreground'}`}
-        title={`Repeat: ${repeatMode}`}
-      >
-        {repeatMode === 'one' ? <Repeat1 size={18} /> : <Repeat size={18} />}
-      </motion.button>
-
-      {/* Open folder - smaller, off to the side */}
-      <motion.button
-        whileTap={{ scale: 0.9 }}
+      {/* Open */}
+      <button
         onClick={handleOpenFiles}
-        className="modern-btn rounded-full p-2.5 ml-4 text-muted-foreground"
+        className="winamp-button p-2 hover:opacity-90 ml-2"
         title="Open folder"
       >
-        <FolderOpen size={18} />
-      </motion.button>
+        <FolderOpen size={14} />
+      </button>
+
+      {/* Shuffle */}
+      <button
+        onClick={toggleShuffle}
+        className={`winamp-button p-2 hover:opacity-90 ml-2 ${isShuffle ? 'winamp-button-active' : ''}`}
+        title="Shuffle"
+      >
+        <Shuffle size={14} />
+      </button>
+
+      {/* Repeat */}
+      <button
+        onClick={toggleRepeat}
+        className={`winamp-button p-2 hover:opacity-90 ${repeatMode !== 'none' ? 'winamp-button-active' : ''}`}
+        title={`Repeat: ${repeatMode}`}
+      >
+        {repeatMode === 'one' ? <Repeat1 size={14} /> : <Repeat size={14} />}
+      </button>
     </div>
   );
 };

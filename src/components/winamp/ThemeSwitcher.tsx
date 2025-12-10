@@ -1,64 +1,55 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAudioStore, Theme } from '@/stores/audioStore';
 import { Palette } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
-const themes: { id: Theme; name: string; color: string }[] = [
-  { id: 'classic-blue', name: 'Purple Glow', color: 'hsl(280, 100%, 60%)' },
-  { id: 'neon', name: 'Neon Cyber', color: 'hsl(180, 100%, 50%)' },
-  { id: 'gold', name: 'Gold Luxe', color: 'hsl(40, 85%, 55%)' },
-  { id: 'dark-metal', name: 'Dark Steel', color: 'hsl(200, 80%, 50%)' },
-  { id: 'minimal-grey', name: 'Minimal', color: 'hsl(220, 60%, 55%)' },
+const THEMES: { id: Theme; name: string; preview: string }[] = [
+  { id: 'classic-blue', name: 'Classic Blue', preview: 'bg-blue-600' },
+  { id: 'dark-metal', name: 'Dark Metal', preview: 'bg-zinc-800' },
+  { id: 'neon', name: 'Neon', preview: 'bg-fuchsia-600' },
+  { id: 'gold', name: 'Gold', preview: 'bg-amber-500' },
+  { id: 'minimal-grey', name: 'Minimal Grey', preview: 'bg-gray-400' },
 ];
 
 export const ThemeSwitcher: React.FC = () => {
   const { theme, setTheme } = useAudioStore();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.9 }}
-            className="absolute bottom-full right-0 mb-3 glass-panel rounded-2xl p-3 shadow-xl min-w-[180px]"
-          >
-            <p className="text-xs text-muted-foreground mb-2 px-2">Theme</p>
-            <div className="space-y-1">
-              {themes.map((t) => (
-                <button
-                  key={t.id}
-                  onClick={() => {
-                    setTheme(t.id);
-                    setIsOpen(false);
-                  }}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all ${
-                    theme === t.id 
-                      ? 'bg-primary/20 text-foreground' 
-                      : 'text-muted-foreground hover:bg-secondary/50 hover:text-foreground'
-                  }`}
-                >
-                  <div 
-                    className="w-4 h-4 rounded-full"
-                    style={{ background: t.color, boxShadow: `0 0 10px ${t.color}` }}
-                  />
-                  <span>{t.name}</span>
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div className="fixed bottom-4 right-4 z-50">
+      <div className="relative">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="winamp-button p-3 rounded-lg"
+          title="Change theme"
+        >
+          <Palette size={20} />
+        </button>
 
-      <motion.button
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen(!isOpen)}
-        className="modern-btn rounded-full p-3 shadow-lg"
-      >
-        <Palette size={20} />
-      </motion.button>
+        {isOpen && (
+          <div className="absolute bottom-full right-0 mb-2 winamp-window p-2 min-w-[160px]">
+            <div className="pixel-font text-[10px] text-muted-foreground mb-2 px-1">
+              COLOR THEMES
+            </div>
+            {THEMES.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => {
+                  setTheme(t.id);
+                  setIsOpen(false);
+                }}
+                className={`
+                  flex items-center gap-2 w-full px-2 py-1.5 rounded-sm
+                  hover:bg-accent/30 transition-colors
+                  ${theme === t.id ? 'bg-accent/50' : ''}
+                `}
+              >
+                <div className={`w-4 h-4 rounded-sm ${t.preview}`} />
+                <span className="pixel-font text-[10px]">{t.name}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

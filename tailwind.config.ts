@@ -47,17 +47,15 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Player specific colors
-        player: {
-          glow: "hsl(var(--player-glow))",
-          "glow-secondary": "hsl(var(--player-glow-secondary))",
-          surface: "hsl(var(--player-surface))",
-        },
-        eq: {
-          green: "hsl(var(--eq-green))",
-          yellow: "hsl(var(--eq-yellow))",
-          red: "hsl(var(--eq-red))",
-          cyan: "hsl(var(--eq-cyan))",
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          primary: "hsl(var(--sidebar-primary))",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+          accent: "hsl(var(--sidebar-accent))",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+          border: "hsl(var(--sidebar-border))",
+          ring: "hsl(var(--sidebar-ring))",
         },
       },
       borderRadius: {
@@ -79,22 +77,8 @@ export default {
           "100%": { transform: "translateX(-50%)" },
         },
         "pulse-glow": {
-          "0%, 100%": { 
-            opacity: "1",
-            filter: "drop-shadow(0 0 20px hsl(var(--player-glow) / 0.6))"
-          },
-          "50%": { 
-            opacity: "0.8",
-            filter: "drop-shadow(0 0 30px hsl(var(--player-glow) / 0.8))"
-          },
-        },
-        "wave": {
-          "0%, 100%": { transform: "scaleY(0.5)" },
-          "50%": { transform: "scaleY(1)" },
-        },
-        "float": {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-10px)" },
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.6" },
         },
       },
       animation: {
@@ -102,12 +86,6 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "scroll-text": "scroll-text 10s linear infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
-        "wave": "wave 1s ease-in-out infinite",
-        "float": "float 3s ease-in-out infinite",
-      },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
       },
     },
   },

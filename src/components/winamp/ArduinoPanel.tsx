@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Plug, Unplug, Activity } from 'lucide-react';
 import { useSerialStore } from '@/stores/serialStore';
-import { Usb, ChevronDown, ChevronUp, Gauge, Hand, Volume2, RotateCw } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface ArduinoPanelProps {
   isConnected: boolean;
@@ -14,148 +13,117 @@ export const ArduinoPanel: React.FC<ArduinoPanelProps> = ({
   onConnect,
   onDisconnect,
 }) => {
-  const { faderPosition, isTouching, arduinoVolume, lastEncoderDirection } = useSerialStore();
-  const [isExpanded, setIsExpanded] = useState(true);
-
-  const volumePercent = Math.round((arduinoVolume / 1023) * 100);
-  const faderPercent = Math.round((faderPosition / 1023) * 100);
+  const { faderPosition, targetPosition, isTouching, arduinoVolume } = useSerialStore();
 
   return (
-    <div className="glass-panel rounded-2xl overflow-hidden">
-      {/* Header */}
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between px-4 py-3 hover:bg-secondary/20 transition-colors"
-      >
-        <div className="flex items-center gap-3">
-          <div className={`p-2 rounded-full transition-colors ${isConnected ? 'bg-eq-green/20' : 'bg-secondary/50'}`}>
-            <Usb size={18} className={isConnected ? 'text-eq-green' : 'text-muted-foreground'} />
-          </div>
-          <div className="text-left">
-            <p className="text-sm font-medium">Arduino Controller</p>
-            <p className={`text-xs ${isConnected ? 'text-eq-green' : 'text-muted-foreground'}`}>
-              {isConnected ? 'Connected • Serial 115200' : 'Disconnected'}
-            </p>
-          </div>
-        </div>
+    <div className="winamp-window">
+      {/* Title bar */}
+      <div className="winamp-title-bar flex items-center justify-between px-2 py-1">
         <div className="flex items-center gap-2">
+          <Activity size={10} />
+          <span className="text-[10px] font-bold tracking-wider">ARDUINO CONTROL</span>
+        </div>
+        <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+      </div>
+
+      <div className="p-3 space-y-3">
+        {/* Connection button */}
+        <button
+          onClick={isConnected ? onDisconnect : onConnect}
+          className={`winamp-button w-full py-2 px-3 flex items-center justify-center gap-2 ${
+            isConnected ? 'winamp-button-active' : ''
+          }`}
+        >
+          {isConnected ? (
+            <>
+              <Unplug size={14} />
+              <span className="text-xs">Disconnect</span>
+            </>
+          ) : (
+            <>
+              <Plug size={14} />
+              <span className="text-xs">Connect Arduino</span>
+            </>
+          )}
+        </button>
+
+        {/* Status display */}
+        <div className="winamp-display p-2 space-y-2 text-[10px] font-mono">
+          {/* Connection status */}
+          <div className="flex justify-between items-center">
+            <span className="opacity-70">Status:</span>
+            <span className={isConnected ? 'text-green-400' : 'text-red-400'}>
+              {isConnected ? 'CONNECTED' : 'DISCONNECTED'}
+            </span>
+          </div>
+
           {isConnected && (
-            <div className="flex items-center gap-1.5 mr-2">
-              <div className={`w-2 h-2 rounded-full animate-pulse ${isTouching ? 'bg-eq-yellow' : 'bg-eq-green'}`} />
+            <>
+              {/* Touch state */}
+              <div className="flex justify-between items-center">
+                <span className="opacity-70">Touch:</span>
+                <span className={isTouching ? 'text-yellow-400' : 'text-gray-400'}>
+                  {isTouching ? 'ACTIVE' : 'IDLE'}
+                </span>
+              </div>
+
+              {/* Fader position */}
+              <div className="flex justify-between items-center">
+                <span className="opacity-70">Fader Pos:</span>
+                <span className="text-winamp-text">{faderPosition}</span>
+              </div>
+
+              {/* Target position */}
+              <div className="flex justify-between items-center">
+                <span className="opacity-70">Target Pos:</span>
+                <span className="text-winamp-text">{targetPosition}</span>
+              </div>
+
+              {/* Arduino volume */}
+              <div className="flex justify-between items-center">
+                <span className="opacity-70">Volume:</span>
+                <span className="text-winamp-text">{Math.round((arduinoVolume / 1023) * 100)}%</span>
+              </div>
+
+              {/* Visual fader indicator */}
+              <div className="pt-2">
+                <div className="text-[8px] opacity-70 mb-1">FADER POSITION</div>
+                <div className="relative h-2 bg-black/50 rounded overflow-hidden">
+                  <div
+                    className="absolute h-full bg-winamp-accent transition-all duration-75"
+                    style={{ width: `${(faderPosition / 1023) * 100}%` }}
+                  />
+                  {/* Target indicator */}
+                  <div
+                    className="absolute h-full w-0.5 bg-yellow-400 transition-all duration-75"
+                    style={{ left: `${(targetPosition / 1023) * 100}%` }}
+                  />
+                </div>
+                <div className="flex justify-between text-[8px] opacity-50 mt-0.5">
+                  <span>0</span>
+                  <span>1023</span>
+                </div>
+              </div>
+            </>
+          )}
+
+          {!isConnected && (
+            <div className="text-center py-2 opacity-50">
+              Click "Connect Arduino" to select serial port
             </div>
           )}
-          {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </div>
-      </button>
 
-      {/* Expanded content */}
-      <AnimatePresence>
-        {isExpanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-          >
-            <div className="px-4 pb-4 space-y-4">
-              {/* Connect/Disconnect button */}
-              <button
-                onClick={isConnected ? onDisconnect : onConnect}
-                className={`w-full py-2.5 rounded-xl text-sm font-medium transition-all ${
-                  isConnected 
-                    ? 'bg-destructive/20 text-destructive hover:bg-destructive/30 border border-destructive/30' 
-                    : 'modern-btn-primary'
-                }`}
-              >
-                {isConnected ? 'Disconnect Arduino' : 'Connect Arduino'}
-              </button>
-
-              {/* Data display when connected */}
-              {isConnected && (
-                <div className="space-y-3">
-                  {/* Fader Position */}
-                  <div className="p-3 rounded-xl bg-secondary/30 border border-border/30">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <Gauge size={14} className="text-muted-foreground" />
-                        <span className="text-xs text-muted-foreground">Fader Position</span>
-                      </div>
-                      <span className="font-mono text-sm">{faderPosition} <span className="text-muted-foreground text-xs">({faderPercent}%)</span></span>
-                    </div>
-                    <div className="h-2 rounded-full bg-muted/30 overflow-hidden">
-                      <motion.div
-                        className="h-full rounded-full"
-                        initial={false}
-                        animate={{ width: `${faderPercent}%` }}
-                        transition={{ duration: 0.1, ease: 'linear' }}
-                        style={{
-                          background: isTouching 
-                            ? 'linear-gradient(90deg, hsl(var(--eq-yellow)), hsl(var(--eq-yellow) / 0.7))' 
-                            : 'linear-gradient(90deg, hsl(var(--player-glow)), hsl(var(--player-glow-secondary)))',
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Volume & Touch Status Row */}
-                  <div className="grid grid-cols-2 gap-3">
-                    {/* Volume */}
-                    <div className="p-3 rounded-xl bg-secondary/30 border border-border/30">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Volume2 size={14} className="text-muted-foreground" />
-                        <span className="text-xs text-muted-foreground">Volume</span>
-                      </div>
-                      <span className="font-mono text-lg font-semibold">{volumePercent}%</span>
-                    </div>
-
-                    {/* Touch Status */}
-                    <div className="p-3 rounded-xl bg-secondary/30 border border-border/30">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Hand size={14} className="text-muted-foreground" />
-                        <span className="text-xs text-muted-foreground">Touch</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full transition-colors ${isTouching ? 'bg-eq-yellow shadow-[0_0_8px_hsl(var(--eq-yellow))]' : 'bg-muted-foreground/30'}`} />
-                        <span className={`text-sm font-medium ${isTouching ? 'text-eq-yellow' : 'text-muted-foreground'}`}>
-                          {isTouching ? 'Active' : 'Idle'}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Encoder Status */}
-                  <div className="p-3 rounded-xl bg-secondary/30 border border-border/30">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <RotateCw size={14} className="text-muted-foreground" />
-                        <span className="text-xs text-muted-foreground">Encoder</span>
-                      </div>
-                      <span className={`text-sm font-mono ${lastEncoderDirection ? 'text-foreground' : 'text-muted-foreground'}`}>
-                        {lastEncoderDirection || 'Waiting...'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Raw Data */}
-                  <div className="pt-2 border-t border-border/20">
-                    <p className="text-[10px] text-muted-foreground/60 font-mono">
-                      RAW: Fader={faderPosition} | Vol={arduinoVolume} | Touch={isTouching ? '1' : '0'}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* Help text when not connected */}
-              {!isConnected && (
-                <p className="text-xs text-muted-foreground text-center">
-                  Connect your Arduino via USB to control the player with a motorized fader
-                </p>
-              )}
-            </div>
-          </motion.div>
+        {/* Instructions */}
+        {isConnected && (
+          <div className="text-[8px] opacity-50 space-y-1">
+            <div>• Touch fader to scrub audio</div>
+            <div>• Rotate encoder: Next/Prev track</div>
+            <div>• Press encoder: Play/Pause</div>
+            <div>• Volume pot: Adjust volume</div>
+          </div>
         )}
-      </AnimatePresence>
+      </div>
     </div>
   );
 };

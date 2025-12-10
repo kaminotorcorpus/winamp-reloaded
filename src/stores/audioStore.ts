@@ -9,7 +9,6 @@ export interface Track {
 }
 
 export type Theme = 'classic-blue' | 'dark-metal' | 'neon' | 'gold' | 'minimal-grey';
-export type VisualizerStyle = 'radial' | 'bars' | 'oscilloscope' | 'spectrum';
 
 export interface EQPreset {
   name: string;
@@ -49,7 +48,6 @@ interface AudioState {
   
   // UI
   theme: Theme;
-  visualizerStyle: VisualizerStyle;
   showEqualizer: boolean;
   showPlaylist: boolean;
   
@@ -74,7 +72,6 @@ interface AudioState {
   setEqPreset: (preset: EQPreset) => void;
   
   setTheme: (theme: Theme) => void;
-  setVisualizerStyle: (style: VisualizerStyle) => void;
   toggleEqualizer: () => void;
   togglePlaylist: () => void;
 }
@@ -98,7 +95,6 @@ export const useAudioStore = create<AudioState>()(
       currentPreset: 'Flat',
       
       theme: 'classic-blue',
-      visualizerStyle: 'radial',
       showEqualizer: true,
       showPlaylist: true,
       
@@ -164,7 +160,6 @@ export const useAudioStore = create<AudioState>()(
       setEqPreset: (preset) => set({ eqValues: [...preset.values], currentPreset: preset.name }),
       
       setTheme: (theme) => set({ theme: theme }),
-      setVisualizerStyle: (style) => set({ visualizerStyle: style }),
       toggleEqualizer: () => set((state) => ({ showEqualizer: !state.showEqualizer })),
       togglePlaylist: () => set((state) => ({ showPlaylist: !state.showPlaylist })),
     }),
@@ -176,7 +171,6 @@ export const useAudioStore = create<AudioState>()(
         eqValues: state.eqValues,
         currentPreset: state.currentPreset,
         theme: state.theme,
-        visualizerStyle: state.visualizerStyle,
         showEqualizer: state.showEqualizer,
         showPlaylist: state.showPlaylist,
         isShuffle: state.isShuffle,
