@@ -36,7 +36,7 @@ export const MainPlayer: React.FC<MainPlayerProps> = ({
     >
       {/* Album Art / Visualizer */}
       <div className="relative">
-        <div className={`album-art aspect-square w-full max-w-xs mx-auto flex items-center justify-center ${isPlaying ? 'spin-slow' : ''}`}>
+        <div className="album-art aspect-square w-full max-w-xs mx-auto flex items-center justify-center">
           <Visualizer getAnalyserData={getAnalyserData} />
         </div>
         
