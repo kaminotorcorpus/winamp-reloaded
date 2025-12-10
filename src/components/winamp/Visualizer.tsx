@@ -71,30 +71,45 @@ export const Visualizer: React.FC<VisualizerProps> = ({ getAnalyserData }) => {
   const drawRadial = useCallback((ctx: CanvasRenderingContext2D, width: number, height: number, dataArray: Uint8Array) => {
     const centerX = width / 2;
     const centerY = height / 2;
+    const minDim = Math.min(width, height);
 
-    if (!isPlaying || dataArray.length === 0) {
+    // Always draw something - idle state
+    if (!isPlaying || dataArray.length === 0 || dataArray.every(v => v === 0)) {
       // Idle state - subtle pulsing rings
       for (let i = 0; i < 3; i++) {
-        const radius = 40 + i * 25;
+        const radius = minDim * 0.15 + i * (minDim * 0.08);
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-        ctx.strokeStyle = withAlpha(colors.glow, 0.15 - i * 0.04);
+        ctx.strokeStyle = withAlpha(colors.glow, 0.2 - i * 0.05);
         ctx.lineWidth = 2;
         ctx.stroke();
       }
+      
+      // Center dot
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, minDim * 0.08, 0, Math.PI * 2);
+      ctx.fillStyle = withAlpha(colors.primary, 0.3);
+      ctx.fill();
       return;
     }
 
     const bars = 64;
     const barWidth = 3;
-    const minRadius = 50;
-    const maxBarHeight = 80;
+    const minRadius = minDim * 0.18;
+    const maxBarHeight = minDim * 0.28;
 
-    // Draw bars
+    // Outer glow ring
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, minRadius + maxBarHeight + 10, 0, Math.PI * 2);
+    ctx.strokeStyle = withAlpha(colors.glow, 0.1);
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Draw bars radiating outward
     for (let i = 0; i < bars; i++) {
       const dataIndex = Math.floor((i / bars) * dataArray.length);
       const value = dataArray[dataIndex] / 255;
-      const barHeight = value * maxBarHeight + 5;
+      const barHeight = value * maxBarHeight + 3;
       const angle = (i / bars) * Math.PI * 2 - Math.PI / 2;
 
       const x1 = centerX + Math.cos(angle) * minRadius;
@@ -102,9 +117,10 @@ export const Visualizer: React.FC<VisualizerProps> = ({ getAnalyserData }) => {
       const x2 = centerX + Math.cos(angle) * (minRadius + barHeight);
       const y2 = centerY + Math.sin(angle) * (minRadius + barHeight);
 
+      // Use theme gradient colors
       const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
-      gradient.addColorStop(0, colors.glow);
-      gradient.addColorStop(0.5, colors.primary);
+      gradient.addColorStop(0, colors.primary);
+      gradient.addColorStop(0.6, colors.glow);
       gradient.addColorStop(1, colors.glowSecondary);
 
       ctx.beginPath();
@@ -118,13 +134,13 @@ export const Visualizer: React.FC<VisualizerProps> = ({ getAnalyserData }) => {
 
     // Inner pulsing circle
     const avgValue = dataArray.reduce((a, b) => a + b, 0) / dataArray.length / 255;
-    const pulseRadius = 40 + avgValue * 15;
+    const pulseRadius = minDim * 0.12 + avgValue * (minDim * 0.06);
 
     ctx.beginPath();
     ctx.arc(centerX, centerY, pulseRadius, 0, Math.PI * 2);
     const innerGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, pulseRadius);
-    innerGradient.addColorStop(0, withAlpha(colors.glow, 0.4));
-    innerGradient.addColorStop(0.6, withAlpha(colors.primary, 0.15));
+    innerGradient.addColorStop(0, withAlpha(colors.glow, 0.5));
+    innerGradient.addColorStop(0.5, withAlpha(colors.primary, 0.25));
     innerGradient.addColorStop(1, withAlpha(colors.glow, 0));
     ctx.fillStyle = innerGradient;
     ctx.fill();
@@ -135,15 +151,14 @@ export const Visualizer: React.FC<VisualizerProps> = ({ getAnalyserData }) => {
     const barCount = 28;
     const gap = 3;
     const barWidth = (width - (barCount + 1) * gap) / barCount;
-    const maxHeight = height * 0.85;
-    const bottomPadding = 15;
+    const maxHeight = height * 0.92;
 
     if (!isPlaying || dataArray.length === 0) {
       // Idle state - minimal bars
       for (let i = 0; i < barCount; i++) {
         const x = gap + i * (barWidth + gap);
         ctx.fillStyle = withAlpha(colors.glow, 0.15);
-        ctx.fillRect(x, height - bottomPadding - 4, barWidth, 4);
+        ctx.fillRect(x, height - 4, barWidth, 4);
       }
       return;
     }
@@ -162,17 +177,17 @@ export const Visualizer: React.FC<VisualizerProps> = ({ getAnalyserData }) => {
       const maxSegments = Math.floor(maxHeight / totalSegmentHeight);
 
       for (let j = 0; j < segments; j++) {
-        const y = height - bottomPadding - (j + 1) * totalSegmentHeight;
+        const y = height - (j + 1) * totalSegmentHeight;
         const ratio = j / maxSegments;
 
-        // Color gradient: green -> yellow -> red
+        // Color gradient using theme colors: primary -> glow -> glowSecondary
         let segmentColor: string;
         if (ratio < 0.5) {
-          segmentColor = colors.eqGreen;
+          segmentColor = colors.primary;
         } else if (ratio < 0.75) {
-          segmentColor = colors.eqYellow;
+          segmentColor = colors.glow;
         } else {
-          segmentColor = colors.eqRed;
+          segmentColor = colors.glowSecondary;
         }
 
         ctx.fillStyle = segmentColor;
@@ -181,11 +196,11 @@ export const Visualizer: React.FC<VisualizerProps> = ({ getAnalyserData }) => {
         ctx.fillRect(x, y, barWidth, segmentHeight);
       }
 
-      // Peak indicator (top segment stays lit briefly)
+      // Peak indicator using accent color
       if (segments > 0) {
-        const peakY = height - bottomPadding - segments * totalSegmentHeight - totalSegmentHeight;
-        ctx.fillStyle = colors.eqRed;
-        ctx.shadowColor = colors.eqRed;
+        const peakY = height - segments * totalSegmentHeight - totalSegmentHeight;
+        ctx.fillStyle = colors.accent;
+        ctx.shadowColor = colors.accent;
         ctx.shadowBlur = 8;
         ctx.fillRect(x, peakY, barWidth, 2);
       }

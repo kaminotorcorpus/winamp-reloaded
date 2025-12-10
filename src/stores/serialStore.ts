@@ -13,6 +13,9 @@ interface SerialState {
   // Volume from Arduino
   arduinoVolume: number;
   
+  // Encoder
+  lastEncoderDirection: string;
+  
   // Actions
   setIsConnected: (connected: boolean) => void;
   setPort: (port: any | null) => void;
@@ -20,6 +23,7 @@ interface SerialState {
   setTargetPosition: (position: number) => void;
   setIsTouching: (touching: boolean) => void;
   setArduinoVolume: (volume: number) => void;
+  setLastEncoderDirection: (direction: string) => void;
 }
 
 export const useSerialStore = create<SerialState>((set) => ({
@@ -29,6 +33,7 @@ export const useSerialStore = create<SerialState>((set) => ({
   targetPosition: 0,
   isTouching: false,
   arduinoVolume: 0,
+  lastEncoderDirection: '',
   
   setIsConnected: (connected) => set({ isConnected: connected }),
   setPort: (port) => set({ port }),
@@ -36,4 +41,5 @@ export const useSerialStore = create<SerialState>((set) => ({
   setTargetPosition: (position) => set({ targetPosition: position }),
   setIsTouching: (touching) => set({ isTouching: touching }),
   setArduinoVolume: (volume) => set({ arduinoVolume: volume }),
+  setLastEncoderDirection: (direction) => set({ lastEncoderDirection: direction }),
 }));

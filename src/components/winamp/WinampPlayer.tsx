@@ -49,6 +49,15 @@ export const WinampPlayer: React.FC = () => {
 
       {/* Main container */}
       <div className="relative z-10 w-full max-w-md mx-auto">
+        {/* Arduino Panel - at top */}
+        <div className="mb-4">
+          <ArduinoPanel
+            isConnected={isConnected}
+            onConnect={connect}
+            onDisconnect={disconnect}
+          />
+        </div>
+
         {/* Main Player */}
         <MainPlayer
           onPlay={play}
@@ -58,19 +67,10 @@ export const WinampPlayer: React.FC = () => {
           getAnalyserData={getAnalyserData}
         />
 
-        {/* Secondary panels - Equalizer and Playlist side by side on larger screens */}
+        {/* Secondary panels - Equalizer and Playlist */}
         <div className="mt-4 space-y-4">
           <Equalizer />
           <Playlist />
-        </div>
-
-        {/* Arduino Panel - collapsible at bottom */}
-        <div className="mt-4">
-          <ArduinoPanel
-            isConnected={isConnected}
-            onConnect={connect}
-            onDisconnect={disconnect}
-          />
         </div>
       </div>
 
