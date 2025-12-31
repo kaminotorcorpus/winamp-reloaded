@@ -72,14 +72,14 @@ export const WinampPlayer: React.FC = () => {
           <Playlist />
         </div>
 
-        {/* Arduino panel on the right */}
-        <div className="flex flex-col gap-0">
+        {/* Arduino panel temporarily hidden */}
+        {/* <div className="flex flex-col gap-0">
           <ArduinoPanel
             isConnected={isConnected}
             onConnect={connect}
             onDisconnect={disconnect}
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Theme switcher */}
