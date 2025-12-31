@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { 
   Play, 
   Pause, 
@@ -18,6 +18,14 @@ interface PlaybackControlsProps {
   onStop: () => void;
 }
 
+// Extend HTMLInputElement to include webkitdirectory
+declare module 'react' {
+  interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
+    webkitdirectory?: string;
+    directory?: string;
+  }
+}
+
 export const PlaybackControls: React.FC<PlaybackControlsProps> = ({
   onPlay,
   onPause,
@@ -32,65 +40,80 @@ export const PlaybackControls: React.FC<PlaybackControlsProps> = ({
     nextTrack,
     prevTrack,
     setPlaylist,
-    setIsPlaying,
   } = useAudioStore();
 
-  const handleOpenFiles = async () => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Check if we're in an iframe/wrapper (showDirectoryPicker won't work)
+  const isEmbedded = (): boolean => {
     try {
-      // Try directory picker first
-      if ('showDirectoryPicker' in window) {
+      return window.self !== window.top;
+    } catch {
+      return true; // If we can't access window.top, we're probably embedded
+    }
+  };
+
+  const processFiles = (files: File[]) => {
+    const tracks: Track[] = files
+      .filter((file) => {
+        const ext = file.name.split('.').pop()?.toLowerCase();
+        return ['mp3', 'wav', 'flac', 'ogg', 'm4a', 'aac'].includes(ext || '');
+      })
+      .map((file) => ({
+        id: crypto.randomUUID(),
+        name: file.name.replace(/\.[^/.]+$/, ''),
+        file,
+        duration: 0,
+      }));
+
+    if (tracks.length > 0) {
+      setPlaylist(tracks);
+      onPlay();
+    }
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    processFiles(Array.from(files));
+    // Reset input so the same folder can be selected again
+    e.target.value = '';
+  };
+
+  const handleOpenFiles = async () => {
+    // Always use file input fallback if embedded (showDirectoryPicker is blocked in iframes)
+    if (isEmbedded()) {
+      fileInputRef.current?.click();
+      return;
+    }
+
+    // Try showDirectoryPicker for non-embedded contexts
+    if ('showDirectoryPicker' in window) {
+      try {
         const dirHandle = await (window as any).showDirectoryPicker();
-        const tracks: Track[] = [];
+        const files: File[] = [];
         
         for await (const entry of dirHandle.values()) {
           if (entry.kind === 'file') {
             const file = await entry.getFile();
-            const ext = file.name.split('.').pop()?.toLowerCase();
-            
-            if (['mp3', 'wav', 'flac', 'ogg', 'm4a', 'aac'].includes(ext || '')) {
-              tracks.push({
-                id: crypto.randomUUID(),
-                name: file.name.replace(/\.[^/.]+$/, ''),
-                file,
-                duration: 0,
-              });
-            }
+            files.push(file);
           }
         }
         
-        if (tracks.length > 0) {
-          setPlaylist(tracks);
-          onPlay();
+        processFiles(files);
+        return;
+      } catch (error: any) {
+        // User cancelled or permission denied - try fallback
+        if (error?.name !== 'AbortError') {
+          console.warn('showDirectoryPicker failed, using fallback:', error);
+          fileInputRef.current?.click();
         }
-      } else {
-        // Fallback to file input
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.multiple = true;
-        input.accept = 'audio/*';
-        
-        input.onchange = (e) => {
-          const files = (e.target as HTMLInputElement).files;
-          if (!files) return;
-          
-          const tracks: Track[] = Array.from(files).map((file) => ({
-            id: crypto.randomUUID(),
-            name: file.name.replace(/\.[^/.]+$/, ''),
-            file,
-            duration: 0,
-          }));
-          
-          if (tracks.length > 0) {
-            setPlaylist(tracks);
-            onPlay();
-          }
-        };
-        
-        input.click();
+        return;
       }
-    } catch (error) {
-      console.error('Error loading files:', error);
     }
+
+    // Fallback for browsers without showDirectoryPicker
+    fileInputRef.current?.click();
   };
 
   return (
@@ -140,6 +163,17 @@ export const PlaybackControls: React.FC<PlaybackControlsProps> = ({
         <FolderOpen size={14} />
       </button>
 
+      {/* Hidden file input for fallback (works in iframes/wrappers) */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        webkitdirectory=""
+        directory=""
+        multiple
+        accept="audio/*"
+        style={{ display: 'none' }}
+        onChange={handleFileInputChange}
+      />
       {/* Shuffle */}
       <button
         onClick={toggleShuffle}
