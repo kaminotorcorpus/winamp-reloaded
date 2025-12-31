@@ -191,31 +191,10 @@ export const useSerialConnection = (seek: (time: number) => void) => {
     }
   }, [processMessage]);
 
-  // Check if we're in an iframe/wrapper (Web Serial API is blocked)
-  const isEmbedded = useCallback((): boolean => {
-    try {
-      return window.self !== window.top;
-    } catch {
-      return true; // If we can't access window.top, we're probably embedded
-    }
-  }, []);
-
   // Connect to serial port
   const connect = useCallback(async () => {
     if (!('serial' in navigator)) {
       alert('Web Serial API not supported in this browser. Use Chrome or Edge.');
-      return;
-    }
-    
-    // Check if we're embedded - Web Serial API doesn't work in iframes
-    if (isEmbedded()) {
-      alert(
-        'Serial connection is not available when embedded in a wrapper.\n\n' +
-        'The Web Serial API is blocked in iframes for security reasons.\n\n' +
-        'Solutions:\n' +
-        '• Open this app directly in a new browser tab\n' +
-        '• Use the standalone version of the app'
-      );
       return;
     }
     
@@ -242,21 +221,11 @@ export const useSerialConnection = (seek: (time: number) => void) => {
       
       console.log('Serial connected at 115200 baud');
       
-    } catch (error: any) {
+    } catch (error) {
       console.error('Serial connection error:', error);
-      // Check if it's a security/permission error (common in embedded contexts)
-      if (error?.name === 'SecurityError' || error?.message?.includes('transient activation')) {
-        alert(
-          'Serial connection blocked.\n\n' +
-          'This may happen if:\n' +
-          '• The app is embedded in a wrapper/iframe\n' +
-          '• The browser blocked the request\n\n' +
-          'Try opening the app in a new browser tab.'
-        );
-      }
       setIsConnected(false);
     }
-  }, [setPort, setIsConnected, readLoop, isEmbedded]);
+  }, [setPort, setIsConnected, readLoop]);
 
   // Disconnect from serial port
   const disconnect = useCallback(async () => {
