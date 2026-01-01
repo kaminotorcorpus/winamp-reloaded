@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAudioStore } from '@/stores/audioStore';
 import { Oscilloscope } from './Oscilloscope';
+import { Activity, ActivitySquare } from 'lucide-react';
 
 interface LCDDisplayProps {
   getAnalyserData: () => Uint8Array;
@@ -14,7 +15,7 @@ const formatTime = (seconds: number): string => {
 };
 
 export const LCDDisplay: React.FC<LCDDisplayProps> = ({ getAnalyserData }) => {
-  const { currentTime, duration, playlist, currentTrackIndex, isPlaying } = useAudioStore();
+  const { currentTime, duration, playlist, currentTrackIndex, isPlaying, showVisualizer, toggleVisualizer } = useAudioStore();
 
   const currentTrack = playlist[currentTrackIndex];
   const trackName = currentTrack?.name || 'No track loaded';
@@ -34,12 +35,36 @@ export const LCDDisplay: React.FC<LCDDisplayProps> = ({ getAnalyserData }) => {
         </div>
       </div>
 
-      {/* Middle row - Time display + Oscilloscope */}
+      {/* Middle row - Time display + Oscilloscope + Toggle */}
       <div className="flex items-center gap-3">
         <div className="lcd-text text-3xl font-bold tracking-wider min-w-[80px]">
           {formatTime(currentTime)}
         </div>
-        <Oscilloscope getAnalyserData={getAnalyserData} />
+        
+        {/* Oscilloscope or placeholder */}
+        {showVisualizer ? (
+          <Oscilloscope getAnalyserData={getAnalyserData} />
+        ) : (
+          <div 
+            className="winamp-lcd rounded-sm flex items-center justify-center"
+            style={{ width: 150, height: 32 }}
+          >
+            <span className="lcd-text-dim text-xs">VIS OFF</span>
+          </div>
+        )}
+        
+        {/* Toggle button */}
+        <button
+          onClick={toggleVisualizer}
+          className="p-1 rounded hover:bg-foreground/10 transition-colors"
+          title={showVisualizer ? 'Désactiver visualisation' : 'Activer visualisation'}
+        >
+          {showVisualizer ? (
+            <Activity className="w-4 h-4 lcd-text" />
+          ) : (
+            <ActivitySquare className="w-4 h-4 lcd-text-dim" />
+          )}
+        </button>
       </div>
 
       {/* Bottom row - Track name (scrolling) */}
