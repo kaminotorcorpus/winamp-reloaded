@@ -50,6 +50,7 @@ interface AudioState {
   theme: Theme;
   showEqualizer: boolean;
   showPlaylist: boolean;
+  showVisualizer: boolean;
   
   // Actions
   setIsPlaying: (playing: boolean) => void;
@@ -74,6 +75,7 @@ interface AudioState {
   setTheme: (theme: Theme) => void;
   toggleEqualizer: () => void;
   togglePlaylist: () => void;
+  toggleVisualizer: () => void;
 }
 
 export const useAudioStore = create<AudioState>()(
@@ -97,6 +99,7 @@ export const useAudioStore = create<AudioState>()(
       theme: 'classic-blue',
       showEqualizer: true,
       showPlaylist: true,
+      showVisualizer: true,
       
       // Actions
       setIsPlaying: (playing) => set({ isPlaying: playing }),
@@ -162,6 +165,7 @@ export const useAudioStore = create<AudioState>()(
       setTheme: (theme) => set({ theme: theme }),
       toggleEqualizer: () => set((state) => ({ showEqualizer: !state.showEqualizer })),
       togglePlaylist: () => set((state) => ({ showPlaylist: !state.showPlaylist })),
+      toggleVisualizer: () => set((state) => ({ showVisualizer: !state.showVisualizer })),
     }),
     {
       name: 'winamp-storage',
@@ -173,6 +177,7 @@ export const useAudioStore = create<AudioState>()(
         theme: state.theme,
         showEqualizer: state.showEqualizer,
         showPlaylist: state.showPlaylist,
+        showVisualizer: state.showVisualizer,
         isShuffle: state.isShuffle,
         repeatMode: state.repeatMode,
       }),

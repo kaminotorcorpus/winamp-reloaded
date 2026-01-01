@@ -34,7 +34,7 @@ export const WinampPlayer: React.FC = () => {
   }, [initAudioContext]);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-start pt-4 p-4 relative overflow-hidden">
       {/* Background pattern */}
       <div 
         className="fixed inset-0 opacity-[0.03] pointer-events-none"
@@ -46,16 +46,6 @@ export const WinampPlayer: React.FC = () => {
           backgroundSize: '20px 20px',
         }}
       />
-
-      {/* Title */}
-      <div className="text-center mb-6">
-        <h1 className="text-3xl font-bold lcd-text pixel-font tracking-wider animate-pulse-glow">
-          RETRO AUDIO PLAYER
-        </h1>
-        <p className="text-muted-foreground text-sm mt-2 font-mono">
-          Winamp-inspired • Click 📁 to load music
-        </p>
-      </div>
 
       {/* Main layout with Arduino panel on the side */}
       <div className="flex gap-4 relative z-10">
@@ -84,16 +74,6 @@ export const WinampPlayer: React.FC = () => {
 
       {/* Theme switcher */}
       <ThemeSwitcher />
-
-      {/* Instructions */}
-      <div className="fixed bottom-4 left-4 winamp-window p-3 max-w-[180px] opacity-80 hover:opacity-100 transition-opacity">
-        <div className="pixel-font text-[8px] text-muted-foreground space-y-1">
-          <p>★ Click 📁 to load folder</p>
-          <p>★ Double-click track to play</p>
-          <p>★ Drag tracks to reorder</p>
-          <p>★ Connect Arduino for fader</p>
-        </div>
-      </div>
     </div>
   );
 };
