@@ -1,8 +1,6 @@
-# Welcome to your Lovable project
+# Welcome to your Web Browser Music player projet
 
-## Project info
-
-**URL**: https://lovable.dev/projects/69310ccb-6e37-4658-a898-a46e1b2b187e
+<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/1XxVQ8zK/winamp.png' border='0' alt='winamp'></a>
 
 ## How can I edit this code?
 
